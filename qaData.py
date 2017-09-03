@@ -5,29 +5,7 @@ import jieba
 import numpy as np
 from gensim.models import Word2Vec
 from gensim.models.keyedvectors import KeyedVectors
-def loadEmbedding(filename):
-    """
-    加载词向量文件
 
-    :param filename: 文件名
-    :return: embeddings列表和它对应的索引
-    """
-    embeddings = []
-    vector = {}
-    word2idx = defaultdict(list)
-    with open(filename, mode="r", encoding="utf-8") as rf:
-        for line in rf:
-            arr = line.split(" ")
-            embedding = [float(val) for val in arr[1: -1]]
-            #print(embedding)
-            vector[len(word2idx)] = [float(val) for val in arr[1: -1]]
-            word2idx[arr[0]] = len(word2idx)
-
-            embeddings.append(embedding)
-    print(np.asarray(embeddings).shape)
-    #embeddings = np.asarray(embeddings)
-    #print(embeddings[0])
-    return vector, word2idx
 
 
 
@@ -123,7 +101,8 @@ def loadData(filename, word2idx, maxLen, training=False):
 
 def trainingBatchIter(questions, answers, labels, questionIds, batchSize):
     """
-    逐个获取每一批训练数据的迭代器，会区分每个问题的正确和错误答案，拼接为（q，a+，a-）形式
+    逐个获取每一批训练数据的迭代器，会区分每个问题的正确和错误答案，拼接为（q，a+，a-）形式,
+    这里，以负样例个数为基准，将问题和正样例扩展对齐
 
     :param questions: 问题列表
     :param answers: 答案列表
