@@ -17,6 +17,7 @@ def restore():
         train()
 
 
+
 def train():
     print("重新训练，请保证计算机拥有至少8G空闲内存与2G空闲显存")
     # 准备训练数据
