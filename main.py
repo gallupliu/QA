@@ -3,8 +3,8 @@ import time
 from gensim.models.keyedvectors import KeyedVectors
 import tensorflow as tf
 
-import qaData
-from qaLSTMNet import QaLSTMNet
+import data_helper
+from bilstm import BILSTM
 
 
 def restore():
@@ -21,13 +21,13 @@ def train():
     print("重新训练，请保证计算机拥有至少8G空闲内存与2G空闲显存")
     # 准备训练数据
     print("正在准备训练数据，大约需要五分钟...")
-    qTrain, aTrain, lTrain, qIdTrain = qaData.loadData(trainingFile, word2idx, unrollSteps, True)
-    qDevelop, aDevelop, lDevelop, qIdDevelop = qaData.loadData(developFile, word2idx, unrollSteps, True)
+    qTrain, aTrain, lTrain, qIdTrain = data_helper.loadData(trainingFile, word2idx, unrollSteps, True)
+    qDevelop, aDevelop, lDevelop, qIdDevelop = data_helper.loadData(developFile, word2idx, unrollSteps, True)
     trainQuestionCounts = qIdTrain[-1]
     for i in range(len(qIdDevelop)):
         qIdDevelop[i] += trainQuestionCounts
     tqs, tta, tfa = [], [], []
-    for question, trueAnswer, falseAnswer in qaData.trainingBatchIter(qTrain + qDevelop, aTrain + aDevelop,
+    for question, trueAnswer, falseAnswer in data_helper.trainingBatchIter(qTrain + qDevelop, aTrain + aDevelop,
                                                                       lTrain + lDevelop, qIdTrain + qIdDevelop,
                                                                       batchSize):
         tqs.append(question), tta.append(trueAnswer), tfa.append(falseAnswer)
@@ -87,12 +87,11 @@ if __name__ == '__main__':
 
     # 读取测试数据
     print("正在载入测试数据，大约需要一分钟...")
-    #embedding, word2idx = qaData.loadEmbedding(embeddingFile)
     model = KeyedVectors.load_word2vec_format('data/wiki.en.text.jian.vector', binary=True)
-    data_set = qaData.read_word_char('./data/training.data')
-    word_embed_dict = qaData.generate_vocab(model, data_set)
-    embedding,word2idx = qaData.generate_embeddings(50, word_embed_dict)
-    qTest, aTest, _, qIdTest = qaData.loadData(testingFile, word2idx, unrollSteps)
+    data_set = data_helper.read_word_char('./data/training.data')
+    word_embed_dict = data_helper.generate_vocab(model, data_set)
+    embedding,word2idx = data_helper.generate_embeddings(50, word_embed_dict)
+    qTest, aTest, _, qIdTest = data_helper.loadData(testingFile, word2idx, unrollSteps)
     print("测试数据加载完成")
     # 配置TensorFlow
     with tf.Graph().as_default(), tf.device(gpuDevice):
@@ -102,7 +101,7 @@ if __name__ == '__main__':
             # 加载LSTM网络
             print("正在加载LSTM网络，大约需要三分钟...")
             globalStep = tf.Variable(0, name="globle_step", trainable=False)
-            lstm = QaLSTMNet(batchSize, unrollSteps, embedding, embeddingSize, rnnSize, margin)
+            lstm = BILSTM(batchSize, unrollSteps, embedding, embeddingSize, rnnSize, margin)
 
             tvars = tf.trainable_variables()
             grads, _ = tf.clip_by_global_norm(tf.gradients(lstm.loss, tvars), max_grad_norm)
@@ -127,7 +126,7 @@ if __name__ == '__main__':
             # 进行测试，输出结果
             print("正在进行测试，大约需要三分钟...")
             with open(resultFile, 'w') as file:
-                for question, answer in qaData.testingBatchIter(qTest, aTest, batchSize):
+                for question, answer in data_helper.testingBatchIter(qTest, aTest, batchSize):
                     feed_dict = {
                         lstm.inputTestQuestions: question,
                         lstm.inputTestAnswers: answer,

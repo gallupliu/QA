@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 
-class QaLSTMNet(object):
+class BILSTM(object):
     """
     中文问答系统使用的LSTM网络结构
     """
