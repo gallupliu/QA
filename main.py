@@ -82,7 +82,7 @@ if __name__ == '__main__':
     max_grad_norm = 5  # 用于控制梯度膨胀，如果梯度向量的L2模超过max_grad_norm，则等比例缩小
 
     allow_soft_placement = True  # Allow device soft device placement
-    gpuMemUsage = 0.75  # 显存最大使用率
+    gpuMemUsage = 0.95  # 显存最大使用率
     gpuDevice = "/gpu:0"  # GPU设备名
 
     # 读取测试数据
