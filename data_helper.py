@@ -50,7 +50,7 @@ def generate_vocab(model,data_set):
     word_embed_dict = {}
     word2idx = defaultdict(list)
     for word in data_set:
-        if word in model.vocab:
+        if word in model.wv.vocab:
             word_embed_dict[word] = model[word].tolist()
 
     print(len(word_embed_dict))
