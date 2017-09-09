@@ -55,6 +55,7 @@ class BILSTM(object):
         self.trueCosSim = self.getCosineSimilarity(question2, trueAnswer2)
         self.falseCosSim = self.getCosineSimilarity(question2, falseAnswer2)
         self.loss_op = self.getLoss(self.trueCosSim, self.falseCosSim, self.margin)
+        self.train_op = self.train_op(self.loss_op)
 
         #self.result = self.getCosineSimilarity(testQuestion2, testAnswer2)
 
