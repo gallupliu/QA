@@ -18,23 +18,20 @@ def sentenceToIndex(sentence, word2idx, maxLen):
     :param maxLen: 句子的最大长度
     :return: 句子的词向量索引表示
     """
+    padding = word2idx.get("<PAD>", 0)
     unknown = word2idx.get("<UNK>", 0)
     num = word2idx.get("NUM", len(word2idx))
-    index = [unknown] * maxLen
+    index = [padding] * maxLen
     i = 0
     for word in jieba.cut(sentence):
         if word in word2idx:
             index[i] = word2idx[word]
         else:
-            if re.match("\d+", word):
-                index[i] = num
-            else:
-                index[i] = unknown
+            index[i] = unknown
         if i >= maxLen - 1:
             break
         i += 1
     return index
-
 
 def read_word_char(filename):
     data_set = set()
@@ -157,5 +154,7 @@ if __name__=='__main__':
     model = KeyedVectors.load_word2vec_format('data/wiki.en.text.jian.vector', binary=True)
     data_set = read_word_char('./data/training.data')
     word_embed_dict = generate_vocab(model, data_set)
+    print(len(word_embed_dict))
     embeddings,word2idx = generate_embeddings(50, word_embed_dict)
     print(len(embeddings))
+    print(len(word2idx))
