@@ -27,10 +27,11 @@ class BILSTM(object):
 
         # 设置word embedding层
         with tf.device("/cpu:0"), tf.name_scope("embedding_layer"):
-            embeddings = tf.get_variable(name='word_embedding',
-                                                   shape=[config.vocab_size, config.embedding_size],
-                                                   initializer=tf.constant_initializer(self.embeddings),
-                                                   trainable=False)
+            embeddings = tf.Variable(tf.to_float(self.embeddings), trainable=True, name="W")
+            #embeddings = tf.get_variable(name='word_embedding',
+            #                                       shape=[config.vocab_size, config.embedding_size],
+            #                                       initializer=tf.constant_initializer(self.embeddings),
+            #                                       trainable=False)
 
             questions = tf.nn.embedding_lookup(embeddings, self.input_questions)
             trueAnswers = tf.nn.embedding_lookup(embeddings, self.input_true_answers)
