@@ -8,6 +8,8 @@ class BILSTM(object):
     """
 
     def __init__(self, config, sess):
+        self.config = config
+        self.sess = sess
 
         self.batchSize = config.batch_size
         self.embeddings = config.embeddings
