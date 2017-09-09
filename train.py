@@ -183,10 +183,11 @@ def main(_):
             checkpoint_prefix = os.path.join(checkpoint_dir, 'model')
             if not os.path.exists(checkpoint_dir):
                 os.makedirs(checkpoint_dir)
-            saver = tf.train.Saver(var_list=tf.global_variables_initializer(),
-                                   max_to_keep= config.num_epochs)
+            #max_to_keep设置保存模型的个数，默认为5
+
 
             sess.run(tf.global_variables_initializer())
+            saver = tf.train.Saver()
             tqs, tta, tfa = [], [], []
             for question, trueAnswer, falseAnswer in data_helper.trainingBatchIter(qTrain + qDevelop, aTrain + aDevelop,
                                                                                    lTrain + lDevelop,

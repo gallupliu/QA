@@ -16,7 +16,7 @@ class BILSTM(object):
         self.rnnSize = config.rnn_size
         self.margin = config.margin
 
-        self.keep_prob = tf.placeholder(tf.float32, name="keep_drop")
+        self.dropout_keep_prob = tf.placeholder(tf.float32, name="keep_drop")
         self.input_questions = tf.placeholder(tf.int32, shape=[None, config.sequence_length])
         self.input_true_answers = tf.placeholder(tf.int32, shape=[None, config.sequence_length])
         self.input_false_answers = tf.placeholder(tf.int32, shape=[None, config.sequence_length])
