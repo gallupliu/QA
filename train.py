@@ -7,6 +7,7 @@ from gensim.models import Word2Vec
 import tensorflow as tf
 import data_helper
 from bilstm import BILSTM
+from tensorflow.python import debug as tf_debug
 
 # 定义参数
 trainingFile = "data/training.data"
@@ -163,6 +164,8 @@ def main(_):
     # 开始训练和测试
     with tf.device('/gpu:0'):
         with tf.Session(config=config.cf) as sess:
+            sess = tf_debug.LocalCLIDebugWrapperSession(sess)
+            sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
             # 建立网络
             model = get_model('match_lstm',sess)
 
