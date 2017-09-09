@@ -63,7 +63,7 @@ class CNN_Config(object):
 class BiLSTM_Config(object):
     def __init__(self, vocab_size):
         # 输入序列(句子)长度
-        self.sequence_length = 100
+        self.sequence_length = 50
         # 循环数
         self.num_epochs = 100
         # batch大小
@@ -74,7 +74,7 @@ class BiLSTM_Config(object):
         # 词向量大小
         self.embedding_size = 50
         # 隐层大小
-        self.rnn_size = 200
+        self.rnn_size = 100
         # L2正则化,未用,没啥效果
         # 论文里给的是0.0001
         self.l2_reg_lambda = 0.
