@@ -67,7 +67,7 @@ class BiLSTM_Config(object):
         # 循环数
         self.num_epochs = 100
         # batch大小
-        self.batch_size = 100
+        self.batch_size = 20
         # 词表大小
         self.vocab_size = vocab_size
         self.embeddings = embeddings
