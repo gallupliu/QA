@@ -95,7 +95,7 @@ class BILSTM(object):
 
 
     def train_op(self,loss):
-        with tf.variable_scope('{}_step'.format(self._name)):
+        with tf.variable_scope("trian"):
             self.global_step = tf.get_variable(shape=[],
                                                initializer=tf.constant_initializer(0),
                                                dtype=tf.int32,
