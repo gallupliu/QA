@@ -74,7 +74,7 @@ class BiLSTM_Config(object):
         # 词向量大小
         self.embedding_size = 50
         # 隐层大小
-        self.rnn_size = 100
+        self.rnn_size = 200
         # L2正则化,未用,没啥效果
         # 论文里给的是0.0001
         self.l2_reg_lambda = 0.
@@ -82,7 +82,7 @@ class BiLSTM_Config(object):
         self.dropout_keep_prob = 1.0
         # 学习率
         # 论文里给的是0.01
-        self.lr = 0.01
+        self.lr = 0.1
         # margin
         # 论文里给的是0.009
         self.margin = 0.1
