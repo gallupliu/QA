@@ -85,6 +85,8 @@ class BiLSTM_Config(object):
         # 论文里给的是0.009
         self.margin = 0.1
 
+        self.max_grad_norm = 5
+
         #time step
         self.unrollSteps = 100  # 句子中的最大词汇数目
         # 设定GPU的性质,允许将不能在GPU上处理的部分放到CPU
