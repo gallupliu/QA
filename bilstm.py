@@ -103,12 +103,11 @@ class BILSTM(object):
                                                initializer=tf.constant_initializer(0),
                                                dtype=tf.int32,
                                                name='global_step')
-        tvars = tf.trainable_variables()
-        grads, _ = tf.clip_by_global_norm(tf.gradients(loss, tvars), self.config.max_grad_norm)
-        optimizer = tf.train.GradientDescentOptimizer(self.config.lr)
+        #tvars = tf.trainable_variables()
+        #grads, _ = tf.clip_by_global_norm(tf.gradients(loss, tvars), self.config.max_grad_norm)
+        #optimizer = tf.train.GradientDescentOptimizer(self.config.lr)
         #optimizer.apply_gradients(zip(grads, tvars))
-        train_op = optimizer.apply_gradients(zip(grads, tvars), global_step=self.global_step)
-        #optimizer = tf.train.AdamOptimizer(learning_rate=self.config.lr, beta1=0.9, beta2=0.999)
-        #train_op = optimizer.minimize(loss, global_step=self.global_step)
+        #train_op = optimizer.apply_gradients(zip(grads, tvars), global_step=self.global_step)
+        optimizer = tf.train.AdamOptimizer(learning_rate=self.config.lr, beta1=0.9, beta2=0.999)
+        train_op = optimizer.minimize(loss, global_step=self.global_step)
         return train_op
-
