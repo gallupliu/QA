@@ -150,8 +150,8 @@ def testingBatchIter(questions, answers, batchSize):
 if __name__=='__main__':
     #vector ,word2inx = loadEmbedding('data/zhwiki_2017_03.sg_50d.word2vec')
     #print(vector[0])
-    #model = Word2Vec.load('data/wiki.en.text.jian.vector')
-    model = KeyedVectors.load_word2vec_format('data/wiki.en.text.jian.vector', binary=True)
+    #model = Word2Vec.load('data/wiki_binary50.model')
+    model = KeyedVectors.load_word2vec_format('data/wiki_binary50.model', binary=True)
     data_set = read_word_char('./data/training.data')
     word_embed_dict = generate_vocab(model, data_set)
     print(len(word_embed_dict))

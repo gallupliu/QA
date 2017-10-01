@@ -17,8 +17,8 @@ resultFile = "predictRst.score"
 saveFile = "newModel/savedModel"
 trainedModel = "trainedModel/savedModel"
 
-#word2vec_model = KeyedVectors.load_word2vec_format('data/wiki.en.text.jian.vector', binary=True)
-word2vec_model = Word2Vec.load('./data/wiki_50.model')
+word2vec_model = KeyedVectors.load_word2vec_format('data/wiki_binary50.model', binary=True)
+#word2vec_model = Word2Vec.load('./data/wiki_binary50.model')
 data_set = data_helper.read_word_char('./data/training.data')
 word_embed_dict = data_helper.generate_vocab(word2vec_model, data_set)
 embeddings,word2idx = data_helper.generate_embeddings(50, word_embed_dict)
