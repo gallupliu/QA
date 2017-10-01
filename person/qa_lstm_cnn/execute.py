@@ -142,7 +142,7 @@ with tf.Graph().as_default():
             grads_and_vars = optimizer.compute_gradients(cnn.loss)
             train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step)
 
-            sess.run(tf.initialize_all_variables())
+            sess.run(tf.global_variables_initializer())
 
             #ori_quests, cand_quests = zip(*train_quests)
             #valid_ori_quests, valid_cand_quests = zip(*valid_quests)
