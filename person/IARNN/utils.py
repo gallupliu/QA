@@ -69,29 +69,27 @@ def cal_loss_and_acc(ori_cand, ori_neg):
 
 
 def get_feature(input_q, input_a, att_W):
-	h_q, w = int(input_q.get_shape()[1]), int(input_q.get_shape()[2])
-	h_a = int(input_a.get_shape()[1])
+    h_q, w = int(input_q.get_shape()[1]), int(input_q.get_shape()[2])
+    h_a = int(input_a.get_shape()[1])
 
-        output_q = max_pooling(input_q)
+    output_q = max_pooling(input_q)
 
-	reshape_q = tf.expand_dims(output_q, 1)
-	reshape_q = tf.tile(reshape_q, [1, h_a, 1])
-	reshape_q = tf.reshape(reshape_q, [-1, w])
-	reshape_a = tf.reshape(input_a, [-1, w])
+    reshape_q = tf.expand_dims(output_q, 1)
+    reshape_q = tf.tile(reshape_q, [1, h_a, 1])
+    reshape_q = tf.reshape(reshape_q, [-1, w])
+    reshape_a = tf.reshape(input_a, [-1, w])
 
-	M = tf.tanh(tf.add(tf.matmul(reshape_q, att_W['Wqm']), tf.matmul(reshape_a, att_W['Wam'])))
-	M = tf.matmul(M, att_W['Wms'])
+    M = tf.tanh(tf.add(tf.matmul(reshape_q, att_W['Wqm']), tf.matmul(reshape_a, att_W['Wam'])))
+    M = tf.matmul(M, att_W['Wms'])
 
-	S = tf.reshape(M, [-1, h_a])
-	S = tf.nn.softmax(S)
+    S = tf.reshape(M, [-1, h_a])
+    S = tf.nn.softmax(S)
+    S_diag = tf.matrix_diag(S)
+    attention_a = tf.batch_matmul(S_diag, input_a)
+    attention_a = tf.reshape(attention_a, [-1, h_a, w])
 
-	S_diag = tf.matrix_diag(S)
-	attention_a = tf.batch_matmul(S_diag, input_a)
-	attention_a = tf.reshape(attention_a, [-1, h_a, w])
-
-        output_a = max_pooling(attention_a)
-
-	return tf.tanh(output_q), tf.tanh(output_a)
+    output_a = max_pooling(attention_a)
+    return tf.tanh(output_q), tf.tanh(output_a)
 
 
 # cal final output with attention weight and lstm out (batch_size, step, rnn_size)
