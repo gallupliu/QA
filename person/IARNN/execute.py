@@ -151,7 +151,7 @@ with tf.Graph().as_default():
                 #lstm.assign_new_lr(sess, cur_lr)
                 #logger.info("current learning ratio:" + str(cur_lr))
                 for ori_train, cand_train, neg_train in batch_iter(ori_quests, cand_quests, FLAGS.batch_size, epoches=1):
-                    run_step(sess, ori_train, cand_train, neg_train, lstm)
+	            run_step(sess, ori_train, cand_train, neg_train, lstm)
                     cur_step = tf.train.global_step(sess, global_step)
                     
                     if cur_step % FLAGS.evaluate_every == 0 and cur_step != 0:
