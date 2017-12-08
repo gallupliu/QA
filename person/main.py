@@ -24,20 +24,6 @@ from preprocess.data_helper import load_train_data, load_test_data, load_embeddi
 from models.bilstm import BiLSTM
 
 # ------------------------- define parameter -----------------------------
-tf.flags.DEFINE_string("train_file", "./data/train", "train corpus file")
-tf.flags.DEFINE_string("test_file", "./data/test1.sample", "test corpus file")
-tf.flags.DEFINE_string("valid_file", "./data/test1.sample", "test corpus file")
-tf.flags.DEFINE_string("embedding_file", "./data/vectors.nobin", "embedding file")
-tf.flags.DEFINE_integer("embedding_size", 100, "embedding size")
-tf.flags.DEFINE_float("dropout", 1, "the proportion of dropout")
-tf.flags.DEFINE_float("lr", 0.1, "the proportion of dropout")
-tf.flags.DEFINE_integer("batch_size", 100, "batch size of each batch")
-tf.flags.DEFINE_integer("epoches", 300, "epoches")
-tf.flags.DEFINE_integer("rnn_size", 300, "embedding size")
-tf.flags.DEFINE_integer("num_rnn_layers", 1, "embedding size")
-tf.flags.DEFINE_integer("evaluate_every", 1000, "run evaluation")
-tf.flags.DEFINE_integer("num_unroll_steps", 100, "embedding size")
-tf.flags.DEFINE_integer("max_grad_norm", 5, "embedding size")
 # Misc Parameters
 tf.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
 tf.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
