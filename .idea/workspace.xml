@@ -2,10 +2,85 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47b1fdf1-c650-4e29-a69e-e2d573d9826e" name="Default" comment="改名">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/text_cnn.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/qaData.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/qaLSTMNet.py" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/person/layers/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/person/main.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/person/metrics/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/person/models/bilstm.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN-GATE/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN-GATE/bigru.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN-GATE/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN-GATE/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN-GATE/polymerization.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN-GATE/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/bilstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/polymerization.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/report.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/tf_upgrade.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/IARNN/utils_new.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/LSTM_ATTENTION_CLASSIFY/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/LSTM_ATTENTION_CLASSIFY/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/LSTM_ATTENTION_CLASSIFY/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/LSTM_ATTENTION_CLASSIFY/lstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/LSTM_ATTENTION_CLASSIFY/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/QA_LSTM_ATTENTION/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/QA_LSTM_ATTENTION/bilstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/QA_LSTM_ATTENTION/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/QA_LSTM_ATTENTION/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/QA_LSTM_ATTENTION/polymerization.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/QA_LSTM_ATTENTION/report.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/QA_LSTM_ATTENTION/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/data/acc" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/data/test1.sample" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/data/train" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/data/vectors.nobin" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/lstm_qa/lstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/lstm_qa/lstm_data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/lstm_qa/lstm_execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/lstm_qa/run.log" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/model/__init__.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/model/bilstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/model/model_utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/model/polymerization.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/modelconfig/insurance/bilstm_config" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bigru/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bigru/bigru.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bigru/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bigru/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bigru/polymerization.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bigru/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bilstm/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bilstm/lstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_bilstm/lstm_data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_cnn/cnn.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_cnn/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_cnn/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_gru/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_gru/bilstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_gru/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_gru/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_gru/polymerization.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_gru/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/bilstm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/polymerization.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/report.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/run.log" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm_cnn/cnn.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm_cnn/data_helper.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm_cnn/execute.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm_cnn/lstm_cnn.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm_cnn/report.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm_cnn/run.log" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/person/qa_lstm_cnn/tf_upgrade.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,34 +89,72 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/QA$main.coverage" NAME="main Coverage Results" MODIFIED="1512748716200" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/person" />
+    <SUITE FILE_PATH="coverage/QA$execute.coverage" NAME="execute Coverage Results" MODIFIED="1512741635185" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/person" />
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
-              <caret line="4" column="24" lean-forward="false" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="taevaluation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/taevaluation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1408">
-              <caret line="89" column="66" lean-forward="false" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="66" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="text_cnn.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/text_cnn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1712">
+            <state relative-caret-position="88">
               <caret line="107" column="39" lean-forward="false" selection-start-line="107" selection-start-column="39" selection-end-line="107" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/person/metrics/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bilstm.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/person/models/bilstm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="542">
+              <caret line="40" column="16" lean-forward="true" selection-start-line="40" selection-start-column="16" selection-end-line="40" selection-end-column="16" />
+              <folding>
+                <element signature="e#162#185#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/person/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="222">
+              <caret line="42" column="53" lean-forward="false" selection-start-line="42" selection-start-column="53" selection-end-line="42" selection-end-column="53" />
+              <folding>
+                <element signature="e#160#170#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="data_helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/person/preprocess/data_helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-34">
+              <caret line="94" column="11" lean-forward="false" selection-start-line="94" selection-start-column="8" selection-end-line="94" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bilstm_config" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/person/configs/insurance/bilstm_config">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="144">
+              <caret line="9" column="27" lean-forward="false" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -61,7 +174,31 @@
       <find>ACC_at1List</find>
       <find>input_y</find>
       <find>linear</find>
+      <find>lstm</find>
+      <find>self.num_unroll_steps</find>
+      <find>ori_input_quests</find>
+      <find>cand_input_quests</find>
+      <find>try</find>
+      <find>neg_input_quests</find>
+      <find>embedding error</find>
+      <find>embeddings</find>
+      <find>self.rnn_size</find>
+      <find>right</find>
     </findStrings>
+    <replaceStrings>
+      <replace>model</replace>
+      <replace>self.config['input']</replace>
+      <replace>self.config['inputs']['share']</replace>
+      <replace>self.config['inputs']['share']['text1_maxlen']</replace>
+      <replace>self.config['global']['share']['text1_maxlen']</replace>
+      <replace>query</replace>
+      <replace>input_left</replace>
+      <replace>input_right</replace>
+      <replace>self.config['global']['num_hidden']</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>E:\QA</dir>
+    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -72,6 +209,13 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/text_cnn.py" />
         <option value="$PROJECT_DIR$/qaData.py" />
+        <option value="$PROJECT_DIR$/person/metrics/__init__.py" />
+        <option value="$PROJECT_DIR$/person/modelconfig/insurance/bilstm_config" />
+        <option value="$PROJECT_DIR$/person/models/model_utils.py" />
+        <option value="$PROJECT_DIR$/person/execute.py" />
+        <option value="$PROJECT_DIR$/person/models/bilstm.py" />
+        <option value="$PROJECT_DIR$/person/configs/insurance/bilstm_config" />
+        <option value="$PROJECT_DIR$/person/main.py" />
       </list>
     </option>
   </component>
@@ -82,9 +226,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-46" />
-    <option name="y" value="26" />
-    <option name="width" value="1370" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
     <option name="height" value="744" />
   </component>
   <component name="ProjectView">
@@ -102,8 +246,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -116,8 +258,42 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QA" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QA" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="person" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QA" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QA" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="person" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="preprocess" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -137,7 +313,45 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
+    <configuration default="false" name="execute" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/person" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="QA" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/person/execute.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/person" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="QA" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/person/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="DjangoTestsConfigurationType" factoryName="Django tests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -287,6 +501,16 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Python.execute" />
+      <item index="1" class="java.lang.String" itemvalue="Python.main" />
+    </list>
+    <recent_temporary>
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Python.main" />
+        <item index="1" class="java.lang.String" itemvalue="Python.execute" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -324,27 +548,27 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-46" y="26" width="1370" height="744" extended-state="0" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295082" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295082" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24963072" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25340393" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295082" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -360,15 +584,113 @@
     <option name="LAST_COMMIT_MESSAGE" value="增加生成&lt;q,d+,d-&gt;的说明" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/README.md">
+    <entry file="file://$PROJECT_DIR$/taevaluation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1408">
+          <caret line="89" column="66" lean-forward="false" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/text_cnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1712">
+          <caret line="107" column="39" lean-forward="false" selection-start-line="107" selection-start-column="39" selection-end-line="107" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/execute.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2640">
+          <caret line="172" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/modelconfig/insurance/bilstm_config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="1" column="23" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/metrics/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/model/bilstm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/model/model_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/model/polymerization.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding>
+            <element signature="e#160#170#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/taevaluation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1408">
+          <caret line="89" column="66" lean-forward="false" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/text_cnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1712">
+          <caret line="107" column="39" lean-forward="false" selection-start-line="107" selection-start-column="39" selection-end-line="107" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -392,7 +714,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="64">
           <caret line="4" column="24" lean-forward="false" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -413,5 +734,153 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/qaData.py" />
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/taevaluation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1408">
+          <caret line="89" column="66" lean-forward="false" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/text_cnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1712">
+          <caret line="107" column="39" lean-forward="true" selection-start-line="107" selection-start-column="39" selection-end-line="107" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="24" lean-forward="false" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qaData.py" />
+    <entry file="file://$PROJECT_DIR$/person/metrics/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/model/bilstm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/model/model_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/model/polymerization.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/modelconfig/insurance/bilstm_config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="1" column="23" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/qa_bilstm/lstm_data_helper.py" />
+    <entry file="file://$PROJECT_DIR$/person/models/model_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="25" column="14" lean-forward="false" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/taevaluation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="89" column="66" lean-forward="false" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/text_cnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="107" column="39" lean-forward="false" selection-start-line="107" selection-start-column="39" selection-end-line="107" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/models/polymerization.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="593">
+          <caret line="58" column="62" lean-forward="false" selection-start-line="58" selection-start-column="62" selection-end-line="58" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/execute.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="51" column="33" lean-forward="false" selection-start-line="51" selection-start-column="33" selection-end-line="51" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/preprocess/data_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="94" column="11" lean-forward="false" selection-start-line="94" selection-start-column="8" selection-end-line="94" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/models/bilstm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="40" column="16" lean-forward="true" selection-start-line="40" selection-start-column="16" selection-end-line="40" selection-end-column="16" />
+          <folding>
+            <element signature="e#162#185#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/configs/insurance/bilstm_config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="9" column="27" lean-forward="false" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/person/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="42" column="53" lean-forward="false" selection-start-line="42" selection-start-column="53" selection-end-line="42" selection-end-column="53" />
+          <folding>
+            <element signature="e#160#170#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
