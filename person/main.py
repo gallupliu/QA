@@ -10,7 +10,7 @@
 
 
 """
-
+import os
 import sys
 import logging
 import datetime
@@ -158,9 +158,6 @@ def train(config):
                                           log_device_placement=FLAGS.log_device_placement, gpu_options=gpu_options)
             with tf.Session(config=session_conf).as_default() as sess:
                 model = get_model(config, embedding)
-                print(type(model))
-
-
 
                 sess.run(tf.global_variables_initializer())
 
@@ -179,7 +176,14 @@ def train(config):
     # ---------------------------------- end train -----------------------------------
 
 def predict(config):
-    pass
+    if os.path.exists(config['model']['model_path']):
+        try:
+            saver = tf.train.import_meta_graph("Model/model.ckpt.meta")
+            with tf.Session() as sess:
+                saver.restore(sess, config['model']['model_path'])
+        except Exception as e:
+            logging.info("model not found",e)
+
 
 
 def main(argv):
