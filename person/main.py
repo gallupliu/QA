@@ -202,6 +202,8 @@ def main(argv):
         train(config)
     elif args.phase == 'predict':
         predict(config)
+    elif args.phase == "export":
+        pass
     else:
         print('Phase Error.', end='\n')
     return
