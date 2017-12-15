@@ -66,6 +66,8 @@ class Evaluator(object):
             self.data_dict[q_id][a_id] = label
             self.score_dict[q_id][a_id] = score
             a_id += 1
+
+
     def calculate_test(self,k):
         right_num = 0 #precision
         rank_index = 0
@@ -206,10 +208,10 @@ class Evaluator(object):
     def evaluate(QApairFile, scoreFile, outputFile='evaluation.score'):
         testor = Evaluator(QApairFile, scoreFile)
         testor.calculate()
-        print("MRR:%f \t MAP:%f \t ACC@1:%f\n" % (testor.MRR(), testor.MAP(), testor.ACC_at_1()))
+        print("MRR:%f \t MAP:%f \n" % (testor.MRR(), testor.MAP()))
         if outputFile != '':
             fw = open(outputFile, 'a')
-            fw.write('%f \t %f \t %f\n' % (testor.MRR(), testor.MAP(), testor.ACC_at_1()))
+            fw.write('%f \t %f \t %f\n' % (testor.MRR(), testor.MAP()))
 
 
 

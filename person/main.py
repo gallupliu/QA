@@ -120,7 +120,7 @@ def valid_model(sess, model, valid_ori_quests, valid_cand_quests, labels, result
         total_ori_cand.extend(ori_cand)
 
     data_len = len(total_ori_cand)
-    acc = cal_acc(labels[:data_len], results[:data_len], total_ori_cand)
+    #acc = cal_acc(labels[:data_len], results[:data_len], total_ori_cand)
     timestr = datetime.datetime.now().isoformat()
     logger.info("%s, evaluation acc:%s" % (timestr, acc))
 
