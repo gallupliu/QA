@@ -25,6 +25,7 @@ class Evaluation(object):
     def __init__(self, data, scores):
         self.preprocess(data,scores)
         self.calculate_test()
+        self.map_1,self.mrr_1 = self.test()
 
     def _to_list(x):
         if isinstance(x, list):
@@ -102,38 +103,38 @@ class Evaluation(object):
     def MAP(self):
         return float(sum(self.APlist)) / len(self.APlist)
 
-    # def test(self):
-    #     """
-    #     https://github.com/SunflowerPKU/WikiQA-CNN/blob/master/src/eval.py
-    #     :return:
-    #     """
-    #     MAP = 0.0
-    #     MRR = 0.0
-    #     for q_id, score_list in self.score_dict.items():
-    #         label_list = self.data_dict[q_id]
-    #         assert len(label_list) == len(score_list)
-    #         ranked_list = sorted(zip(label_list, score_list),key=lambda x:x[1], reverse=True)
-    #         correct = 0
-    #         total = 0
-    #         AP = 0.0
-    #         mrr_mark = False
-    #         for i in range(len(ranked_list)):
-    #             label = label_list[i]
-    #             # compute MRR
-    #             if (label == '1' or label == 1) and mrr_mark == False:
-    #                 MRR += 1.0 / float(i + 1)
-    #                 mrr_mark = True
-    #             # compute MAP
-    #             total += 1
-    #             if label == '1' or label == 1:
-    #                 correct += 1
-    #                 AP += float(correct) / float(total)
-    #         AP /= float(correct)
-    #         MAP += AP
-    #
-    #     MAP /= float(len(score_dict))
-    #     MRR /= float(len(score_dict))
-    #     return MAP, MRR
+    def test(self):
+        """
+        https://github.com/SunflowerPKU/WikiQA-CNN/blob/master/src/eval.py
+        :return:
+        """
+        MAP = 0.0
+        MRR = 0.0
+        for q_id, score_list in self.score_dict.items():
+            label_list = self.data_dict[q_id]
+            assert len(label_list) == len(score_list)
+            ranked_list = sorted(zip(label_list, score_list),key=lambda x:x[1], reverse=True)
+            correct = 0
+            total = 0
+            AP = 0.0
+            mrr_mark = False
+            for i in range(len(ranked_list)):
+                label = label_list[i]
+                # compute MRR
+                if (label == '1' or label == 1) and mrr_mark == False:
+                    MRR += 1.0 / float(i + 1)
+                    mrr_mark = True
+                # compute MAP
+                total += 1
+                if label == '1' or label == 1:
+                    correct += 1
+                    AP += float(correct) / float(total)
+            AP /= float(correct)
+            MAP += AP
+
+        MAP /= float(len(self.score_dict))
+        MRR /= float(len(self.score_dict))
+        return MAP, MRR
     #
     # def Precision_at_k(self,k):
     #     """

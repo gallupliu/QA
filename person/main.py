@@ -84,7 +84,7 @@ def valid_run_step(sess, ori_batch, cand_batch, model, dropout=1.):
         model.keep_prob: dropout
     }
 
-    step, ori_cand_score = sess.run([model.global_step, model.test_q_a], feed_dict)
+    step, ori_cand_score = sess.run([model.global_step, model.ori_cand], feed_dict)
 
     return ori_cand_score
 
@@ -112,10 +112,10 @@ def cal_acc(labels, results, total_ori_cand):
 
 
 # ---------------------------------- execute valid model ------------------------------------------
-def valid_model(sess, model, valid_ori_quests, valid_cand_quests, labels, results):
+def valid_model(sess, model, valid_ori_quests, valid_cand_quests, labels, results,config):
     logger.info("start to validate model")
     total_ori_cand = []
-    for ori_valid, cand_valid, neg_valid in batch_iter(valid_ori_quests, valid_cand_quests, FLAGS.batch_size, 1,
+    for ori_valid, cand_valid, neg_valid in batch_iter(valid_ori_quests, valid_cand_quests, config['inputs']['train']['batch_size'], 1,
                                                        is_valid=True):
         ori_cand = valid_run_step(sess, ori_valid, cand_valid, model)
         total_ori_cand.extend(ori_cand)
@@ -126,11 +126,11 @@ def valid_model(sess, model, valid_ori_quests, valid_cand_quests, labels, result
         data.append([valid_ori_quests[i], valid_cand_quests[i], labels[i]])
 
     evalution = Evaluation(data, results)
-    #acc = cal_acc(labels[:data_len], results[:data_len], total_ori_cand)
+    acc = cal_acc(labels[:data_len], results[:data_len], total_ori_cand)
 
 
     timestr = datetime.datetime.now().isoformat()
-    logger.info("%s, evaluation mrr:%s,map:%s" % (timestr, evalution.MRR(),evalution.MAP()))
+    logger.info("%s, evaluation mrr:%s,map:%s,test_map:%s,test_mrr:%s,acc:%s:" % (timestr, evalution.MRR(),evalution.MAP(),evalution.map_1,evalution.mrr_1,acc))
 
 
 # ---------------------------------- execute valid model end --------------------------------------
@@ -170,17 +170,17 @@ def train(config):
 
                 sess.run(tf.global_variables_initializer())
 
-                for epoch in range(FLAGS.epoches):
+                for epoch in range(config['inputs']['train']['epoches']):
                     # cur_lr = FLAGS.lr / (epoch + 1)
                     # model.assign_new_lr(sess, cur_lr)
                     # logger.info("current learning ratio:" + str(cur_lr))
-                    for ori_train, cand_train, neg_train in batch_iter(ori_quests, cand_quests, FLAGS.batch_size,
+                    for ori_train, cand_train, neg_train in batch_iter(ori_quests, cand_quests, config['inputs']['train']['batch_size'],
                                                                        epoches=1):
                         run_step(sess, ori_train, cand_train, neg_train, model)
-                        # cur_step = tf.train.global_step(sess, model.global_step)
+                        cur_step = tf.train.global_step(sess, model.global_step)
 
-                        # if cur_step % FLAGS.evaluate_every == 0 and cur_step != 0:
-                        valid_model(sess, model, valid_ori_quests, valid_cand_quests, valid_labels, valid_results)
+                        if cur_step % 100 == 0 and cur_step != 0:
+                            valid_model(sess, model, valid_ori_quests, valid_cand_quests, valid_labels, valid_results,config)
                 # valid_model(sess, model, test_ori_quests, test_cand_quests, labels, results)
     # ---------------------------------- end train -----------------------------------
 
