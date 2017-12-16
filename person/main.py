@@ -22,6 +22,7 @@ import argparse
 
 from preprocess.data_helper import load_train_data, load_test_data, load_embedding, batch_iter
 from models.bilstm import BiLSTM
+from metrics.evalution import Evaluation
 
 # ------------------------- define parameter -----------------------------
 # Misc Parameters
@@ -120,9 +121,16 @@ def valid_model(sess, model, valid_ori_quests, valid_cand_quests, labels, result
         total_ori_cand.extend(ori_cand)
 
     data_len = len(total_ori_cand)
+    data = []
+    for i in range(data_len):
+        data.append([valid_ori_quests[i], valid_cand_quests[i], labels[i]])
+
+    evalution = Evaluation(data, results)
     #acc = cal_acc(labels[:data_len], results[:data_len], total_ori_cand)
+
+
     timestr = datetime.datetime.now().isoformat()
-    logger.info("%s, evaluation acc:%s" % (timestr, acc))
+    logger.info("%s, evaluation mrr:%s,map:%s" % (timestr, evalution.MRR(),evalution.MAP()))
 
 
 # ---------------------------------- execute valid model end --------------------------------------
@@ -150,6 +158,7 @@ def train(config):
                                                                                       word2idx,
                                                                                       config['inputs']['share']['text1_maxlen'])
 
+
     logging.info("start train")
     with tf.Graph().as_default():
         with tf.device("/cpu:0"):
@@ -168,10 +177,10 @@ def train(config):
                     for ori_train, cand_train, neg_train in batch_iter(ori_quests, cand_quests, FLAGS.batch_size,
                                                                        epoches=1):
                         run_step(sess, ori_train, cand_train, neg_train, model)
-                        cur_step = tf.train.global_step(sess, model.global_step)
+                        # cur_step = tf.train.global_step(sess, model.global_step)
 
-                        if cur_step % FLAGS.evaluate_every == 0 and cur_step != 0:
-                            valid_model(sess, model, valid_ori_quests, valid_cand_quests, valid_labels, valid_results)
+                        # if cur_step % FLAGS.evaluate_every == 0 and cur_step != 0:
+                        valid_model(sess, model, valid_ori_quests, valid_cand_quests, valid_labels, valid_results)
                 # valid_model(sess, model, test_ori_quests, test_cand_quests, labels, results)
     # ---------------------------------- end train -----------------------------------
 

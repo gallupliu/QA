@@ -15,15 +15,16 @@ import numpy as np
 import random
 import math
 
-class Evaluator(object):
+class Evaluation(object):
     data_dict = {}
     score_dict = {}
     ACC_at1List = []
     APlist = []
     RRlist = []
 
-    def __init__(self, data, scores,metrics):
-        self.preprocess(data,scores,metrics)
+    def __init__(self, data, scores):
+        self.preprocess(data,scores)
+        self.calculate_test()
 
     def _to_list(x):
         if isinstance(x, list):
@@ -38,7 +39,7 @@ class Evaluator(object):
         return c
 
 
-    def preprocess(self,data,scores,metrics):
+    def preprocess(self,data,scores):
         """
         :描述：将data中答案和scores按照字典形式对应
         :param data:list
@@ -68,7 +69,7 @@ class Evaluator(object):
             a_id += 1
 
 
-    def calculate_test(self,k):
+    def calculate_test(self):
         right_num = 0 #precision
         rank_index = 0
         cur_list = [] #mrr map
@@ -86,8 +87,8 @@ class Evaluator(object):
                     p = float(right_num) / rank_index
                     cur_list.append(p)
 
-                if i >= k:
-                    break
+                # if i >= k:
+                #     break
             if len(cur_list) > 0 and len(cur_list) != len(ranked_list):
                 self.RRlist.append(cur_list[0])
                 self.APlist.append(float(sum(cur_list)) / len(cur_list))
@@ -101,117 +102,117 @@ class Evaluator(object):
     def MAP(self):
         return float(sum(self.APlist)) / len(self.APlist)
 
-    def test(self):
-        """
-        https://github.com/SunflowerPKU/WikiQA-CNN/blob/master/src/eval.py
-        :return:
-        """
-        MAP = 0.0
-        MRR = 0.0
-        for q_id, score_list in self.score_dict.items():
-            label_list = self.data_dict[q_id]
-            assert len(label_list) == len(score_list)
-            ranked_list = sorted(zip(label_list, score_list),key=lambda x:x[1], reverse=True)
-            correct = 0
-            total = 0
-            AP = 0.0
-            mrr_mark = False
-            for i in range(len(ranked_list)):
-                label = label_list[i]
-                # compute MRR
-                if (label == '1' or label == 1) and mrr_mark == False:
-                    MRR += 1.0 / float(i + 1)
-                    mrr_mark = True
-                # compute MAP
-                total += 1
-                if label == '1' or label == 1:
-                    correct += 1
-                    AP += float(correct) / float(total)
-            AP /= float(correct)
-            MAP += AP
-
-        MAP /= float(len(score_dict))
-        MRR /= float(len(score_dict))
-        return MAP, MRR
-
-    def Precision_at_k(self,k):
-        """
-        https://github.com/SunflowerPKU/WikiQA-CNN/blob/master/src/eval.py
-        :return:
-        """
-        MAP = 0.0
-        MRR = 0.0
-        for q_id, score_list in self.score_dict.items():
-            label_list = self.data_dict[q_id]
-            assert len(label_list) == len(score_list)
-            ranked_list = sorted(zip(label_list, score_list),key=lambda x:x[1], reverse=True)
-            correct = 0
-            total = 0
-            for i in range(len(ranked_list)):
-                label = label_list[i]
-                if sum(label) > 1:
-                    total += 1
-
-                if (label == '1' or label == 1):
-                    correct += 1
-                if i >= k:
-                    break
-        return MAP, MRR
-
-    def eval_ndcg(y_true, y_pred, k=10, rel_threshold=0.):
-        if k <= 0:
-            return 0.
-        s = 0.
-        y_true = np.squeeze(y_true)
-        y_pred = np.squeeze(y_pred)
-        c = zip(y_true, y_pred)
-        random.shuffle(c)
-        c_g = sorted(c, key=lambda x: x[0], reverse=True)
-        c_p = sorted(c, key=lambda x: x[1], reverse=True)
-        idcg = 0.
-        ndcg = 0.
-        for i, (g, p) in enumerate(c_g):
-            if i >= k:
-                break
-            if g > rel_threshold:
-                idcg += (math.pow(2., g) - 1.) / math.log(2. + i)
-        for i, (g, p) in enumerate(c_p):
-            if i >= k:
-                break
-            if g > rel_threshold:
-                ndcg += (math.pow(2., g) - 1.) / math.log(2. + i)
-        if idcg == 0.:
-            return 0.
-        else:
-            return ndcg / idcg
-
-    def eval_precision(y_true, y_pred, k=10, rel_threshold=0.):
-        if k <= 0:
-            return 0.
-        s = 0.
-        y_true = np.squeeze(y_true)
-        y_pred = np.squeeze(y_pred)
-        c = zip(y_true, y_pred)
-        random.shuffle(c)
-        c = sorted(c, key=lambda x: x[1], reverse=True)
-        ipos = 0
-        precision = 0.
-        for i, (g, p) in enumerate(c):
-            if i >= k:
-                break
-            if g > rel_threshold:
-                precision += 1
-        precision /= k
-        return precision
-
-
-    def evaluate(QApairFile, scoreFile, outputFile='evaluation.score'):
-        testor = Evaluator(QApairFile, scoreFile)
-        testor.calculate()
-        print("MRR:%f \t MAP:%f \n" % (testor.MRR(), testor.MAP()))
-        if outputFile != '':
-            fw = open(outputFile, 'a')
-            fw.write('%f \t %f \t %f\n' % (testor.MRR(), testor.MAP()))
+    # def test(self):
+    #     """
+    #     https://github.com/SunflowerPKU/WikiQA-CNN/blob/master/src/eval.py
+    #     :return:
+    #     """
+    #     MAP = 0.0
+    #     MRR = 0.0
+    #     for q_id, score_list in self.score_dict.items():
+    #         label_list = self.data_dict[q_id]
+    #         assert len(label_list) == len(score_list)
+    #         ranked_list = sorted(zip(label_list, score_list),key=lambda x:x[1], reverse=True)
+    #         correct = 0
+    #         total = 0
+    #         AP = 0.0
+    #         mrr_mark = False
+    #         for i in range(len(ranked_list)):
+    #             label = label_list[i]
+    #             # compute MRR
+    #             if (label == '1' or label == 1) and mrr_mark == False:
+    #                 MRR += 1.0 / float(i + 1)
+    #                 mrr_mark = True
+    #             # compute MAP
+    #             total += 1
+    #             if label == '1' or label == 1:
+    #                 correct += 1
+    #                 AP += float(correct) / float(total)
+    #         AP /= float(correct)
+    #         MAP += AP
+    #
+    #     MAP /= float(len(score_dict))
+    #     MRR /= float(len(score_dict))
+    #     return MAP, MRR
+    #
+    # def Precision_at_k(self,k):
+    #     """
+    #     https://github.com/SunflowerPKU/WikiQA-CNN/blob/master/src/eval.py
+    #     :return:
+    #     """
+    #     MAP = 0.0
+    #     MRR = 0.0
+    #     for q_id, score_list in self.score_dict.items():
+    #         label_list = self.data_dict[q_id]
+    #         assert len(label_list) == len(score_list)
+    #         ranked_list = sorted(zip(label_list, score_list),key=lambda x:x[1], reverse=True)
+    #         correct = 0
+    #         total = 0
+    #         for i in range(len(ranked_list)):
+    #             label = label_list[i]
+    #             if sum(label) > 1:
+    #                 total += 1
+    #
+    #             if (label == '1' or label == 1):
+    #                 correct += 1
+    #             if i >= k:
+    #                 break
+    #     return MAP, MRR
+    #
+    # def eval_ndcg(y_true, y_pred, k=10, rel_threshold=0.):
+    #     if k <= 0:
+    #         return 0.
+    #     s = 0.
+    #     y_true = np.squeeze(y_true)
+    #     y_pred = np.squeeze(y_pred)
+    #     c = zip(y_true, y_pred)
+    #     random.shuffle(c)
+    #     c_g = sorted(c, key=lambda x: x[0], reverse=True)
+    #     c_p = sorted(c, key=lambda x: x[1], reverse=True)
+    #     idcg = 0.
+    #     ndcg = 0.
+    #     for i, (g, p) in enumerate(c_g):
+    #         if i >= k:
+    #             break
+    #         if g > rel_threshold:
+    #             idcg += (math.pow(2., g) - 1.) / math.log(2. + i)
+    #     for i, (g, p) in enumerate(c_p):
+    #         if i >= k:
+    #             break
+    #         if g > rel_threshold:
+    #             ndcg += (math.pow(2., g) - 1.) / math.log(2. + i)
+    #     if idcg == 0.:
+    #         return 0.
+    #     else:
+    #         return ndcg / idcg
+    #
+    # def eval_precision(y_true, y_pred, k=10, rel_threshold=0.):
+    #     if k <= 0:
+    #         return 0.
+    #     s = 0.
+    #     y_true = np.squeeze(y_true)
+    #     y_pred = np.squeeze(y_pred)
+    #     c = zip(y_true, y_pred)
+    #     random.shuffle(c)
+    #     c = sorted(c, key=lambda x: x[1], reverse=True)
+    #     ipos = 0
+    #     precision = 0.
+    #     for i, (g, p) in enumerate(c):
+    #         if i >= k:
+    #             break
+    #         if g > rel_threshold:
+    #             precision += 1
+    #     precision /= k
+    #     return precision
+    #
+    #
+    # def evaluate(QApairFile, scoreFile, outputFile='evaluation.score'):
+    #     testor = Evaluator(QApairFile, scoreFile)
+    #     testor.calculate()
+    #     print("MRR:%f \t MAP:%f \n" % (testor.MRR(), testor.MAP()))
+    #     if outputFile != '':
+    #         fw = open(outputFile, 'a')
+    #         fw.write('%f \t %f \t %f\n' % (testor.MRR(), testor.MAP()))
 
 
 
