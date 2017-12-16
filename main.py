@@ -1,139 +1,249 @@
+# encoding: utf-8
+"""
+@author: gallupliu 
+@contact: gallup-liu@hotmail.com
+
+@version: 1.0
+@license: Apache Licence
+@file: main.py
+@time: 2017/12/8 22:06
+
+
+"""
 import os
+import sys
+import logging
+import datetime
 import time
-from gensim.models.keyedvectors import KeyedVectors
+import json
 import tensorflow as tf
+import operator
+import argparse
 
-import data_helper
-from bilstm import BILSTM
+from preprocess.data_helper import load_train_data, load_test_data, load_embedding, batch_iter
+from models.bilstm import BiLSTM
+from metrics.evalution import Evaluation
+from data.insuranceqa  import data
+
+# ------------------------- define parameter -----------------------------
+# Misc Parameters
+tf.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
+tf.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
+tf.flags.DEFINE_float("gpu_options", 0.9, "use memory rate")
+
+FLAGS = tf.flags.FLAGS
+# ----------------------------- define parameter end ----------------------------------
+
+# ----------------------------- define a logger -------------------------------
+logger = logging.getLogger("execute")
+logger.setLevel(logging.INFO)
+
+fh = logging.FileHandler("./run.log", mode="w")
+fh.setLevel(logging.INFO)
+
+fmt = "%(asctime)-15s %(levelname)s %(filename)s %(lineno)d %(process)d %(message)s"
+datefmt = "%a %d %b %Y %H:%M:%S"
+formatter = logging.Formatter(fmt, datefmt)
+
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+# ----------------------------- define a logger end ----------------------------------
 
 
-def restore():
+
+# ----------------------------------- execute train model ---------------------------------
+def run_step(sess, ori_batch, cand_batch, neg_batch, model, dropout=1.):
+    start_time = time.time()
+    feed_dict = {
+        model.query: ori_batch,
+        model.input_left: cand_batch,
+        model.input_right: neg_batch,
+        model.keep_prob: dropout
+    }
+
+    _, step, ori_cand_score, ori_neg_score, cur_loss, cur_acc = sess.run(
+        [model.train_op, model.global_step, model.ori_cand, model.ori_neg, model.loss, model.acc], feed_dict)
+    time_str = datetime.datetime.now().isoformat()
+    right, wrong, score = [0.0] * 3
+    for i in range(0, len(ori_batch)):
+        if ori_cand_score[i] > 0.55 and ori_neg_score[i] < 0.4:
+            right += 1.0
+        else:
+            wrong += 1.0
+        score += ori_cand_score[i] - ori_neg_score[i]
+    time_elapsed = time.time() - start_time
+    logger.info("%s: step %s, loss %s, acc %s, score %s, wrong %s, %6.7f secs/batch" % (
+    time_str, step, cur_loss, cur_acc, score, wrong, time_elapsed))
+
+    return cur_loss, ori_cand_score
+
+
+def valid_run_step(sess, ori_batch, cand_batch, model, dropout=1.):
+    feed_dict = {
+        model.query: ori_batch,
+        model.input_left: cand_batch,
+        model.keep_prob: dropout
+    }
+
+    step, ori_cand_score = sess.run([model.global_step, model.ori_cand], feed_dict)
+
+    return ori_cand_score
+
+
+# ---------------------------------- execute train model end --------------------------------------
+
+def cal_acc(labels, results, total_ori_cand):
+    if len(labels) == len(results) == len(total_ori_cand):
+        retdict = {}
+        for label, result, ori_cand in zip(labels, results, total_ori_cand):
+            if result not in retdict:
+                retdict[result] = []
+            retdict[result].append((ori_cand, label))
+
+        correct = 0
+        for key, value in retdict.items():
+            value.sort(key=operator.itemgetter(0), reverse=True)
+            score, flag = value[0]
+            if flag == 1:
+                correct += 1
+        return 1. * correct / len(retdict)
+    else:
+        logger.info("data error")
+        return 0
+
+
+# ---------------------------------- execute valid model ------------------------------------------
+def valid_model(sess, model, valid_ori_quests, valid_cand_quests, labels, results,config):
+    logger.info("start to validate model")
+    total_ori_cand = []
+    for ori_valid, cand_valid, neg_valid in batch_iter(valid_ori_quests, valid_cand_quests, config['inputs']['train']['batch_size'], 1,
+                                                       is_valid=True):
+        ori_cand = valid_run_step(sess, ori_valid, cand_valid, model)
+        total_ori_cand.extend(ori_cand)
+
+    data_len = len(total_ori_cand)
+    data = []
+    for i in range(data_len):
+        data.append([valid_ori_quests[i], valid_cand_quests[i], labels[i]])
+
+    evalution = Evaluation(data, results)
+    acc = cal_acc(labels[:data_len], results[:data_len], total_ori_cand)
+
+
+    timestr = datetime.datetime.now().isoformat()
+    logger.info("%s, evaluation mrr:%s,map:%s,test_map:%s,test_mrr:%s,acc:%s:" % (timestr, evalution.MRR(),evalution.MAP(),evalution.map_1,evalution.mrr_1,acc))
+
+
+def valid_step(sess, model,data):
+    logger.info("start to validate model")
+    total_ori_cand = []
+    for ori_valid, cand_valid, label in data:
+        ori_cand = valid_run_step(sess, ori_valid, cand_valid, model)
+        total_ori_cand.extend(ori_cand)
+
+
+    evalution = Evaluation(data, total_ori_cand)
+    # data_len = len(data)
+    # labels = []
+    # for i in range(data_len):
+    #     labels.append(data[i][3])
+    # acc = cal_acc(labels, results, total_ori_cand)
+
+
+    timestr = datetime.datetime.now().isoformat()
+    logger.info("%s, evaluation mrr:%s,map:%s,test_map:%s,test_mrr:%s,:" % (timestr, evalution.MRR(),evalution.MAP(),evalution.map_1,evalution.mrr_1))
+
+
+# ---------------------------------- execute valid model end --------------------------------------
+
+
+def get_model(config,embedding):
+    model = None
+    print(config['model_name'])
     try:
-        print("正在加载模型，大约需要一分钟...")
-        saver.restore(sess, trainedModel)
+        if config['model_name'] == "BiLSTM":
+            model = BiLSTM(config, embedding)
     except Exception as e:
-        print(e)
-        print("加载模型失败，重新开始训练")
-        train()
+        logging.error("load model Exception", e)
+        exit()
+
+    return model
+
+def train(config):
+    logging.info("start load data")
+    embedding, word2idx, idx2word = load_embedding(config['inputs']['share']['embed_file'], config['inputs']['share']['embed_size'])
+    ori_quests, cand_quests = load_train_data(config['inputs']['train']['relation_file'], word2idx,
+                                              config['inputs']['share']['text1_maxlen'])
+
+    valid_ori_quests, valid_cand_quests, valid_labels, valid_results = load_test_data(config['inputs']['valid']['relation_file'],
+                                                                                      word2idx,
+                                                                                      config['inputs']['share']['text1_maxlen'])
+
+
+    logging.info("start train")
+    with tf.Graph().as_default():
+        with tf.device("/cpu:0"):
+            gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=FLAGS.gpu_options)
+            session_conf = tf.ConfigProto(allow_soft_placement=FLAGS.allow_soft_placement,
+                                          log_device_placement=FLAGS.log_device_placement, gpu_options=gpu_options)
+            with tf.Session(config=session_conf).as_default() as sess:
+                model = get_model(config, embedding)
+
+                sess.run(tf.global_variables_initializer())
+
+                for epoch in range(config['inputs']['train']['epoches']):
+                    # cur_lr = FLAGS.lr / (epoch + 1)
+                    # model.assign_new_lr(sess, cur_lr)
+                    # logger.info("current learning ratio:" + str(cur_lr))
+                    # for ori_train, cand_train, neg_train in batch_iter(ori_quests, cand_quests, config['inputs']['train']['batch_size'],
+                    #                                                    epoches=1):
+                    for (_, ori_train, cand_train, neg_train) in data.load_train(config['inputs']['train']['batch_size'],
+                                                                                 config['inputs']['share']['text1_maxlen'],
+                                                                                 config['inputs']['share']['text1_maxlen']):
+                        run_step(sess, ori_train, cand_train, neg_train, model)
+                        cur_step = tf.train.global_step(sess, model.global_step)
+
+                        if cur_step % 100 == 0 and cur_step != 0:
+                            valid_step(sess, model, data)
+                            data.load_test(config['inputs']['share']['text1_maxlen'], config['inputs']['share']['text1_maxlen'])
+                            #valid_model(sess, model, valid_ori_quests, valid_cand_quests, valid_labels, valid_results,config)
+                # valid_model(sess, model, test_ori_quests, test_cand_quests, labels, results)
+    # ---------------------------------- end train -----------------------------------
+
+def predict(config):
+    if os.path.exists(config['model']['model_path']):
+        try:
+            saver = tf.train.import_meta_graph("Model/model.ckpt.meta")
+            with tf.Session() as sess:
+                saver.restore(sess, config['model']['model_path'])
+        except Exception as e:
+            logging.info("model not found",e)
 
 
 
-def train():
-    print("重新训练，请保证计算机拥有至少8G空闲内存与2G空闲显存")
-    # 准备训练数据
-    print("正在准备训练数据，大约需要五分钟...")
-    qTrain, aTrain, lTrain, qIdTrain = data_helper.loadData(trainingFile, word2idx, unrollSteps, True)
-    qDevelop, aDevelop, lDevelop, qIdDevelop = data_helper.loadData(developFile, word2idx, unrollSteps, True)
-    trainQuestionCounts = qIdTrain[-1]
-    for i in range(len(qIdDevelop)):
-        qIdDevelop[i] += trainQuestionCounts
-    tqs, tta, tfa = [], [], []
-    for question, trueAnswer, falseAnswer in data_helper.trainingBatchIter(qTrain + qDevelop, aTrain + aDevelop,
-                                                                      lTrain + lDevelop, qIdTrain + qIdDevelop,
-                                                                      batchSize):
-        tqs.append(question), tta.append(trueAnswer), tfa.append(falseAnswer)
-    print("加载完成！")
-    # 开始训练
-    print("开始训练，全部训练过程大约需要12小时")
-    sess.run(tf.global_variables_initializer())
-    lr = learningRate  # 引入局部变量，防止shadow name
-    for i in range(lrDownCount):
-        optimizer = tf.train.GradientDescentOptimizer(lr)
-        optimizer.apply_gradients(zip(grads, tvars))
-        trainOp = optimizer.apply_gradients(zip(grads, tvars), global_step=globalStep)
-        for epoch in range(epochs):
-            for question, trueAnswer, falseAnswer in zip(tqs, tta, tfa):
-                startTime = time.time()
-                feed_dict = {
-                    lstm.inputQuestions: question,
-                    lstm.inputTrueAnswers: trueAnswer,
-                    lstm.inputFalseAnswers: falseAnswer,
-                    lstm.keep_prob: dropout
-                }
-                _, step, _, _, loss = \
-                    sess.run([trainOp, globalStep, lstm.trueCosSim, lstm.falseCosSim, lstm.loss], feed_dict)
-                timeUsed = time.time() - startTime
-                print("step:", step, "loss:", loss, "time:", timeUsed)
-            saver.save(sess, saveFile)
-        lr *= lrDownRate
+def main(argv):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--phase', default='train', help='Phase: Can be train or predict, the default value is train.')
+    parser.add_argument('--model_file', default='./configs/insurance/bilstm_config', help='Model_file: modelZoo model file for the chosen model.')
+    args = parser.parse_args()
+    model_file =  args.model_file
+    with open(model_file, 'r') as f:
+        config = json.load(f)
+    # data = QAData(config,config,logger)
+    # data.setup()
 
+    # test_ori_quests, test_cand_quests, labels, results = load_test_data(config['inputs']['test']['relation_file'], word2idx,
+    #                                                                     config['inputs']['share']['text1_maxlen'])
 
-if __name__ == '__main__':
-    # 定义参数
-    trainingFile = "data/training.data"
-    developFile = "data/develop.data"
-    testingFile = "data/testing.data"
-    resultFile = "predictRst.score"
-    saveFile = "newModel/savedModel"
-    trainedModel = "trainedModel/savedModel"
-    embeddingFile = "data/zhwiki_2017_03.sg_50d.word2vec"
-    embeddingSize = 50  # 词向量的维度
+    # if args.phase == 'train':
+    #     train(config)
+    # elif args.phase == 'predict':
+    #     predict(config)
+    # elif args.phase == "export":
+    #     pass
+    # else:
+    #     print('Phase Error.', end='\n')
+    # return
 
-    dropout = 1.0
-    learningRate = 0.4  # 学习速度
-    lrDownRate = 0.5  # 学习速度下降速度
-    lrDownCount = 4  # 学习速度下降次数
-    epochs = 20  # 每次学习速度指数下降之前执行的完整epoch次数
-    batchSize = 20  # 每一批次处理的<b>问题</b>个数
-
-    rnnSize = 100  # LSTM cell中隐藏层神经元的个数
-    margin = 0.1  # M is constant margin
-
-    unrollSteps = 100  # 句子中的最大词汇数目
-    max_grad_norm = 5  # 用于控制梯度膨胀，如果梯度向量的L2模超过max_grad_norm，则等比例缩小
-
-    allow_soft_placement = True  # Allow device soft device placement
-    gpuMemUsage = 0.95  # 显存最大使用率
-    gpuDevice = "/gpu:0"  # GPU设备名
-
-    # 读取测试数据
-    print("正在载入测试数据，大约需要一分钟...")
-    model = KeyedVectors.load_word2vec_format('data/wiki.en.text.jian.vector', binary=True)
-    data_set = data_helper.read_word_char('./data/training.data')
-    word_embed_dict = data_helper.generate_vocab(model, data_set)
-    embedding,word2idx = data_helper.generate_embeddings(50, word_embed_dict)
-    qTest, aTest, _, qIdTest = data_helper.loadData(testingFile, word2idx, unrollSteps)
-    print("测试数据加载完成")
-    # 配置TensorFlow
-    with tf.Graph().as_default(), tf.device(gpuDevice):
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpuMemUsage)
-        session_conf = tf.ConfigProto(allow_soft_placement=allow_soft_placement, gpu_options=gpu_options)
-        with tf.Session(config=session_conf).as_default() as sess:
-            # 加载LSTM网络
-            print("正在加载LSTM网络，大约需要三分钟...")
-            globalStep = tf.Variable(0, name="globle_step", trainable=False)
-            lstm = BILSTM(batchSize, unrollSteps, embedding, embeddingSize, rnnSize, margin)
-
-            tvars = tf.trainable_variables()
-            grads, _ = tf.clip_by_global_norm(tf.gradients(lstm.loss, tvars), max_grad_norm)
-            saver = tf.train.Saver()
-            print("加载完成！")
-
-            # 加载模型或训练模型
-            if os.path.exists(trainedModel + '.index'):
-                while True:
-                    choice = input("找到已经训练好的模型，是否载入（y/n）")
-                    if choice.strip().lower() == 'y':
-                        restore()
-                        break
-                    elif choice.strip().lower() == 'n':
-                        train()
-                        break
-                    else:
-                        print("无效的输入！\n")
-            else:
-                train()
-
-            # 进行测试，输出结果
-            print("正在进行测试，大约需要三分钟...")
-            with open(resultFile, 'w') as file:
-                for question, answer in data_helper.testingBatchIter(qTest, aTest, batchSize):
-                    feed_dict = {
-                        lstm.inputTestQuestions: question,
-                        lstm.inputTestAnswers: answer,
-                        lstm.keep_prob: dropout
-                    }
-                    _, scores = sess.run([globalStep, lstm.result], feed_dict)
-                    for score in scores:
-                        file.write("%.9f" % score + '\n')
-    print("所有步骤完成！程序结束")
+if __name__=='__main__':
+    main(sys.argv)
