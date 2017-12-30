@@ -1,38 +1,55 @@
-# encoding: utf-8
-"""
-@author: gallupliu 
-@contact: gallup-liu@hotmail.com
-
-@version: 1.0
-@license: Apache Licence
-@file: rank_evalution.py
-@time: 2017/12/9 0:03
-
-
-"""
-
-import sys
-import random
 import numpy as np
 import math
 
 class rank_eval():
 
-    def __init__(self, rel_threshold=0.):
+    def __init__(self, qids,labels,scores,metrics,rel_threshold=0.):
         self.rel_threshold = rel_threshold
+        self.scores_dict = {}
+        self.labels_dict = {}
+
+
+        length = len(qids)
+        for i in range(length):
+            if qids[i] not in self.scores_dict.keys():
+                self.scores_dict[qids[i]] = []
+            else:
+                self.scores_dict[qids[i]].append(scores[i])
+
+            if qids[i] not in self.labels_dict.keys():
+                self.labels_dict[qids[i]] = []
+            else:
+                self.labels_dict[qids[i]].append(labels[i])
+
+        num = 0
+
+        res = dict([[k,0.] for k in metrics])
+
+        for k,v in self.scores_dict.items():
+            y_pred = v
+            y_true = self.labels_dict[k]
+            print(k,v)
+            print(y_true,y_pred)
+            curr_res = self.eval(y_true=y_true, y_pred=y_pred,
+                                      metrics=metrics)
+            for k, v in curr_res.items():
+                res[k] += v
+            num += 1
+        print('  '.join(['%s:%f' % (k, v / num) for k, v in res.items()]), ' ...')
+
+
+
 
     def zipped(self, y_true, y_pred):
-        y_true = np.squeeze(y_true)
-        y_pred = np.squeeze(y_pred)
-        c = zip(y_true, y_pred)
-        random.shuffle(c)
+        c = list(zip(y_true, y_pred))
         return c
 
-    def eval(self, y_true, y_pred,
-            metrics=['map', 'p@1', 'p@5', 'p@10', 'p@20',
+    def eval(self, y_true, y_pred, 
+            metrics=['map', 'p@1', 'p@5', 'p@10', 'p@20', 
                 'ndcg@1', 'ndcg@5', 'ndcg@10', 'ndcg@20'], k = 20):
         res = {}
         res['map'] = self.map(y_true, y_pred)
+        res['mrr'] = self.mrr(y_true, y_pred)
         all_ndcg = self.ndcg(y_true, y_pred, k=k)
         all_precision = self.precision(y_true, y_pred, k=k)
         res.update({'p@%d'%(i+1):all_precision[i] for i in range(k)})
@@ -53,6 +70,18 @@ class rank_eval():
             return 0.
         else:
             return s / ipos
+
+    def mrr(self,y_true,y_pred):
+        s = 0.
+        c = list(self.zipped(y_true, y_pred))
+        c_s = sorted(c, key=lambda x: x[1], reverse=True)
+        for j, (g, p) in enumerate(c_s):
+            if g > self.rel_threshold:
+                ipos = y_pred.index(p) + 1
+                s = 1 / ipos
+                break
+
+        return s
 
     def ndcg(self, y_true, y_pred, k = 20):
         s = 0.
@@ -83,8 +112,6 @@ class rank_eval():
     def precision(self, y_true, y_pred, k = 20):
         c = self.zipped(y_true, y_pred)
         c = sorted(c, key=lambda x:x[1], reverse=True)
-        ipos = 0
-        s = 0.
         precision = np.zeros([k], dtype=np.float32) #[0. for i in range(k)]
         for i, (g,p) in enumerate(c):
             if g > self.rel_threshold:
@@ -95,70 +122,9 @@ class rank_eval():
         return precision
 
 
-def eval_map(y_true, y_pred, rel_threshold=0):
-    s = 0.
-    y_true = np.squeeze(y_true)
-    y_pred = np.squeeze(y_pred)
-    c = zip(y_true, y_pred)
-    random.shuffle(c)
-    c = sorted(c, key=lambda x:x[1], reverse=True)
-    ipos = 0
-    for j, (g, p) in enumerate(c):
-        if g > rel_threshold:
-            ipos += 1.
-            s += ipos / ( j + 1.)
-    if ipos == 0:
-        s = 0.
-    else:
-        s /= ipos
-    return s
-
-def eval_ndcg(y_true, y_pred, k = 10, rel_threshold=0.):
-    if k <= 0:
-        return 0.
-    s = 0.
-    y_true = np.squeeze(y_true)
-    y_pred = np.squeeze(y_pred)
-    c = zip(y_true, y_pred)
-    random.shuffle(c)
-    c_g = sorted(c, key=lambda x:x[0], reverse=True)
-    c_p = sorted(c, key=lambda x:x[1], reverse=True)
-    idcg = 0.
-    ndcg = 0.
-    for i, (g,p) in enumerate(c_g):
-        if i >= k:
-            break
-        if g > rel_threshold:
-            idcg += (math.pow(2., g) - 1.) / math.log(2. + i)
-    for i, (g,p) in enumerate(c_p):
-        if i >= k:
-            break
-        if g > rel_threshold:
-            ndcg += (math.pow(2., g) - 1.) / math.log(2. + i)
-    if idcg == 0.:
-        return 0.
-    else:
-        return ndcg / idcg
-
-def eval_precision(y_true, y_pred, k = 10, rel_threshold=0.):
-    if k <= 0:
-        return 0.
-    s = 0.
-    y_true = np.squeeze(y_true)
-    y_pred = np.squeeze(y_pred)
-    c = zip(y_true, y_pred)
-    random.shuffle(c)
-    c = sorted(c, key=lambda x:x[1], reverse=True)
-    ipos = 0
-    precision = 0.
-    for i, (g,p) in enumerate(c):
-        if i >= k:
-            break
-        if g > rel_threshold:
-            precision += 1
-    precision /=  k
-    return precision
-
-def eval_mrr(y_true, y_pred, k = 10):
-    s = 0.
-    return s
+if __name__ == "__main__":
+    labels = [0,0,0,1,1,0,1,0,1,0]
+    scores = [0.3,0.52,0.48,0.51,0.67,0.98,0.72,0.45,0.89,0.30]
+    qids = [0,0,0,0,0,0,0,0,0,0]
+    metrics = ["map", "mrr", "p@1", "ndcg@1"]
+    rank_eval( qids,labels,scores,metrics)

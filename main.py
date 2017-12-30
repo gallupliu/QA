@@ -22,8 +22,8 @@ import argparse
 
 from preprocess.data_helper import load_train_data, load_test_data, load_embedding, batch_iter
 from models.bilstm import BiLSTM
-from metrics.evalution import Evaluation
-from data.insuranceqa  import data
+from metrics import rank_evaluations
+from data.insuranceqazh  import data
 
 # ------------------------- define parameter -----------------------------
 # Misc Parameters
@@ -52,7 +52,7 @@ logger.addHandler(fh)
 
 
 # ----------------------------------- execute train model ---------------------------------
-def run_step(sess, ori_batch, cand_batch, neg_batch, model, dropout=1.):
+def train_step(sess, ori_batch, cand_batch, neg_batch, model, dropout=1.):
     start_time = time.time()
     feed_dict = {
         model.query: ori_batch,
@@ -78,80 +78,54 @@ def run_step(sess, ori_batch, cand_batch, neg_batch, model, dropout=1.):
     return cur_loss, ori_cand_score
 
 
-def valid_run_step(sess, ori_batch, cand_batch, model, dropout=1.):
-    feed_dict = {
-        model.query: ori_batch,
-        model.input_left: cand_batch,
-        model.keep_prob: dropout
-    }
-
-    step, ori_cand_score = sess.run([model.global_step, model.ori_cand], feed_dict)
-
-    return ori_cand_score
-
 
 # ---------------------------------- execute train model end --------------------------------------
-
-def cal_acc(labels, results, total_ori_cand):
-    if len(labels) == len(results) == len(total_ori_cand):
-        retdict = {}
-        for label, result, ori_cand in zip(labels, results, total_ori_cand):
-            if result not in retdict:
-                retdict[result] = []
-            retdict[result].append((ori_cand, label))
-
-        correct = 0
-        for key, value in retdict.items():
-            value.sort(key=operator.itemgetter(0), reverse=True)
-            score, flag = value[0]
-            if flag == 1:
-                correct += 1
-        return 1. * correct / len(retdict)
-    else:
-        logger.info("data error")
-        return 0
-
+#
+# def cal_acc(labels, results, total_ori_cand):
+#     if len(labels) == len(results) == len(total_ori_cand):
+#         retdict = {}
+#         for label, result, ori_cand in zip(labels, results, total_ori_cand):
+#             if result not in retdict:
+#                 retdict[result] = []
+#             retdict[result].append((ori_cand, label))
+#
+#         correct = 0
+#         for key, value in retdict.items():
+#             value.sort(key=operator.itemgetter(0), reverse=True)
+#             score, flag = value[0]
+#             if flag == 1:
+#                 correct += 1
+#         return 1. * correct / len(retdict)
+#     else:
+#         logger.info("data error")
+#         return 0
 
 # ---------------------------------- execute valid model ------------------------------------------
-def valid_model(sess, model, valid_ori_quests, valid_cand_quests, labels, results,config):
+def valid_step(sess, model, valid_ori_quests, valid_cand_quests, labels,qids,config):
+    """
+    Evaluates model on a dev set
+    """
     logger.info("start to validate model")
     total_ori_cand = []
     for ori_valid, cand_valid, neg_valid in batch_iter(valid_ori_quests, valid_cand_quests, config['inputs']['train']['batch_size'], 1,
                                                        is_valid=True):
-        ori_cand = valid_run_step(sess, ori_valid, cand_valid, model)
-        total_ori_cand.extend(ori_cand)
+        feed_dict = {
+            model.query: ori_valid,
+            model.input_left: cand_valid,
+            model.keep_prob: 1.0
+        }
+
+        step, ori_cand_score = sess.run([model.global_step, model.ori_cand], feed_dict)
+        total_ori_cand.extend(ori_cand_score)
 
     data_len = len(total_ori_cand)
     data = []
     for i in range(data_len):
         data.append([valid_ori_quests[i], valid_cand_quests[i], labels[i]])
 
-    evalution = Evaluation(data, results)
-    acc = cal_acc(labels[:data_len], results[:data_len], total_ori_cand)
+    metrics = ["map", "mrr", "p@1", "ndcg@1"]
+    rank_evaluations.rank_eval(qids,labels,total_ori_cand,metrics)
 
-
-    timestr = datetime.datetime.now().isoformat()
-    logger.info("%s, evaluation mrr:%s,map:%s,test_map:%s,test_mrr:%s,acc:%s:" % (timestr, evalution.MRR(),evalution.MAP(),evalution.map_1,evalution.mrr_1,acc))
-
-
-def valid_step(sess, model,data):
-    logger.info("start to validate model")
-    total_ori_cand = []
-    for ori_valid, cand_valid, label in data:
-        ori_cand = valid_run_step(sess, ori_valid, cand_valid, model)
-        total_ori_cand.extend(ori_cand)
-
-
-    evalution = Evaluation(data, total_ori_cand)
-    # data_len = len(data)
-    # labels = []
-    # for i in range(data_len):
-    #     labels.append(data[i][3])
-    # acc = cal_acc(labels, results, total_ori_cand)
-
-
-    timestr = datetime.datetime.now().isoformat()
-    logger.info("%s, evaluation mrr:%s,map:%s,test_map:%s,test_mrr:%s,:" % (timestr, evalution.MRR(),evalution.MAP(),evalution.map_1,evalution.mrr_1))
 
 
 # ---------------------------------- execute valid model end --------------------------------------
@@ -172,12 +146,6 @@ def get_model(config,embedding):
 def train(config):
     logging.info("start load data")
     embedding, word2idx, idx2word = load_embedding(config['inputs']['share']['embed_file'], config['inputs']['share']['embed_size'])
-    ori_quests, cand_quests = load_train_data(config['inputs']['train']['relation_file'], word2idx,
-                                              config['inputs']['share']['text1_maxlen'])
-
-    valid_ori_quests, valid_cand_quests, valid_labels, valid_results = load_test_data(config['inputs']['valid']['relation_file'],
-                                                                                      word2idx,
-                                                                                      config['inputs']['share']['text1_maxlen'])
 
 
     logging.info("start train")
@@ -192,22 +160,18 @@ def train(config):
                 sess.run(tf.global_variables_initializer())
 
                 for epoch in range(config['inputs']['train']['epoches']):
-                    # cur_lr = FLAGS.lr / (epoch + 1)
-                    # model.assign_new_lr(sess, cur_lr)
-                    # logger.info("current learning ratio:" + str(cur_lr))
-                    # for ori_train, cand_train, neg_train in batch_iter(ori_quests, cand_quests, config['inputs']['train']['batch_size'],
-                    #                                                    epoches=1):
+
                     for (_, ori_train, cand_train, neg_train) in data.load_train(config['inputs']['train']['batch_size'],
                                                                                  config['inputs']['share']['text1_maxlen'],
                                                                                  config['inputs']['share']['text1_maxlen']):
-                        run_step(sess, ori_train, cand_train, neg_train, model)
+                        train_step(sess, ori_train, cand_train, neg_train, model)
                         cur_step = tf.train.global_step(sess, model.global_step)
 
                         if cur_step % 100 == 0 and cur_step != 0:
-                            valid_step(sess, model, data)
-                            data.load_test(config['inputs']['share']['text1_maxlen'], config['inputs']['share']['text1_maxlen'])
-                            #valid_model(sess, model, valid_ori_quests, valid_cand_quests, valid_labels, valid_results,config)
-                # valid_model(sess, model, test_ori_quests, test_cand_quests, labels, results)
+                            test_data = data.load_test(config['inputs']['share']['text1_maxlen'], config['inputs']['share']['text1_maxlen'])
+                            qids, valid_ori_quests, valid_cand_quests, valid_labels =zip(*test_data)
+                            valid_step(sess, model, valid_ori_quests, valid_cand_quests, valid_labels, qids, config)
+
     # ---------------------------------- end train -----------------------------------
 
 def predict(config):
@@ -220,6 +184,8 @@ def predict(config):
             logging.info("model not found",e)
 
 
+def export(config):
+    pass
 
 def main(argv):
     parser = argparse.ArgumentParser()
@@ -232,18 +198,18 @@ def main(argv):
     # data = QAData(config,config,logger)
     # data.setup()
 
-    # test_ori_quests, test_cand_quests, labels, results = load_test_data(config['inputs']['test']['relation_file'], word2idx,
-    #                                                                     config['inputs']['share']['text1_maxlen'])
+    print("args.phase：%s"%args.phase)
+    # for valid in valid_data:
+    #     print(valid)
 
-    # if args.phase == 'train':
-    #     train(config)
-    # elif args.phase == 'predict':
-    #     predict(config)
-    # elif args.phase == "export":
-    #     pass
-    # else:
-    #     print('Phase Error.', end='\n')
-    # return
+    if args.phase == 'train':
+        train(config)
+    elif args.phase == 'predict':
+        predict(config)
+    elif args.phase == "export":
+        export(config)
+    else:
+        print('Phase Error.', end='\n')
 
 if __name__=='__main__':
     main(sys.argv)

@@ -5,11 +5,12 @@
 
 @version: 1.0
 @license: Apache Licence
-@file: bilstm.py
-@time: 2017/12/8 22:26
+@file: textcnn.py
+@time: 2017/12/30 14:53
 
 
 """
+
 
 import tensorflow as tf
 from  models import model_utils
@@ -17,11 +18,11 @@ from  models.model import Model
 from utils.utils import feature2cos_sim, max_pooling, cal_loss_and_acc
 
 
-class BiLSTM(Model):
+class TextCNN(Model):
     def __init__(self, config,embedding):
         # self.config = config
         # self.embeddings = embedding
-        super(BiLSTM, self).__init__(config,embedding)
+        super(TextCNN, self).__init__(config,embedding)
         self.add_placeholder()
         query_ids, left_ids, right_ids = self.add_embedding()
         query_feature = self.build(query_ids)
@@ -69,11 +70,8 @@ class BiLSTM(Model):
         :param ids:
         :return:
         """
-        with tf.variable_scope("LSTM_scope", reuse=None):
-            outputs = model_utils.bi_rnn(ids, 'lstm', self.config['global']['num_hidden'], self.config['global']['num_layers'],
-                                         self.config['inputs']['train']['dropout'], 'bilstm')
-            outputs = tf.concat(outputs, 2)
-            feature = tf.nn.tanh(max_pooling(outputs))
+        with tf.variable_scope("TEXTCNN_scope", reuse=None):
+            feature = model_utils.text_cnn(ids,filter_sizes,num_filters,embedding_size,sequence_length,dropout_keep_prob=1.0)
         return feature
 
     def train_op(self,loss):

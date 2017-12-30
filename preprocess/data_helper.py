@@ -90,7 +90,7 @@ def load_test_data(filename, word2idx, sequence_len):
     """
     load test data
     """
-    ori_quests, cand_quests, labels, results = [], [], [], []
+    ori_quests, cand_quests, labels, qids = [], [], [], []
     with codecs.open(filename, mode="r", encoding="utf-8") as rf:
         try:
             for line in rf.readlines():
@@ -107,14 +107,14 @@ def load_test_data(filename, word2idx, sequence_len):
                 ori_quests.append(ori_quest)
                 cand_quests.append(cand_quest)
                 labels.append(label)
-                results.append(result)
+                qids.append(result)
 
         except Exception as e:
             logging.error("load test error," , e)
         finally:
             rf.close()
     logging.info("load test data finish!")
-    return ori_quests, cand_quests, labels, results
+    return ori_quests, cand_quests, labels, qids
 
 def batch_iter(ori_quests, cand_quests, batch_size, epoches, is_valid=False):
     """

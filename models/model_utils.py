@@ -14,6 +14,51 @@
 
 import  tensorflow as tf
 
+def text_cnn(inputs,filter_sizes,num_filters,embedding_size,sequence_length,dropout_keep_prob=1.0):
+    # Create a convolution + maxpool layer for each filter size
+    pooled_outputs = []
+    for i, filter_size in enumerate(filter_sizes):
+        with tf.variable_scope("conv-maxpool-%s" % filter_size):
+            # Convolution Layer
+            filter_shape = [filter_size, embedding_size, 1, num_filters]
+
+            # Create variable named "weights".
+            weights = tf.get_variable("weights", filter_shape,
+                                      initializer=tf.random_normal_initializer())
+            # Create variable named "biases".
+            biases = tf.get_variable("biases", [num_filters],
+                                     initializer=tf.constant_intializer(0.0))
+            conv = tf.nn.conv2d(
+                inputs,
+                weights,
+                strides=[1, 1, 1, 1],
+                padding="VALID",
+                name="conv")
+            # Apply nonlinearity
+            h = tf.nn.relu(tf.nn.bias_add(conv,  biases), name="relu")
+            # Maxpooling over the outputs
+            pooled = tf.nn.max_pool(
+                h,
+                ksize=[1, sequence_length - filter_size + 1, 1, 1],
+                strides=[1, 1, 1, 1],
+                padding='VALID',
+                name="pool")
+            pooled_outputs.append(pooled)
+
+    # Combine all the pooled features
+    num_filters_total = num_filters * len(filter_sizes)
+    h_pool = tf.concat(pooled_outputs, 3)
+    h_pool_flat = tf.reshape(h_pool, [-1, num_filters_total])
+
+    # Add dropout
+    with tf.name_scope("dropout"):
+        h_drop = tf.nn.dropout(h_pool_flat, dropout_keep_prob)
+
+    return h_drop
+
+
+
+
 def rnn_cell(cell_name,num_layers, num_hidden,  dropout):
     #
     # with tf.name_scope(cell_name+scope), tf.variable_scope(cell_name+scope):

@@ -1,12 +1,12 @@
 {
-  "model_name": "BiLSTM",
+  "model_name": "TextCNN",
   "global":{
       "model_type": "PY",
       "optimizer": "adam",
       "learning_rate": 1e-1,
       "max_grad_norm":5,
-      "num_hidden": 300,
-      "num_layers": 1
+      "num_filters": 300,
+      "num_layers": 3
   },
   "inputs": {
     "share": {
