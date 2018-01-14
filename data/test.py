@@ -10,17 +10,27 @@
 
 
 """
-from insuranceqa.test import insuranceQAFactory
-from wikiqa.test import wikiQAFactory
+# from insuranceqa.test import insuraceqa
+# from wikiqa.test import wikiqa
+
+#抽象类
+class DataSuper(object):
+    def __init__(self):
+        pass
+
+    def gen_train(self):
+        pass
+
+    def gen_embeddings(self):
+        pass
+
+#具体策略类
+class Data(object):
+
+    def __init__(self,csuper):
+        self.csuper = csuper
+
+    def get_data(self):
+        return self.csuper.gen_train()
 
 
-
-if __name__ == '__main__':
-    myFactory_1 = wikiQAFactory()
-    myFactory_2 = insuranceQAFactory()
-
-    read_data_1 = myFactory_1.read_data()
-    read_data_2 = myFactory_2.read_data()
-
-    read_data_1.gen_train()
-    read_data_2.gen_train()

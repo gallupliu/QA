@@ -10,17 +10,13 @@
 
 
 """
-from data import Dataqa,QAFactory
+from data.test import DataSuper
 
-class wikiqa(Dataqa):
+class wikiqa(DataSuper):
     def gen_train(self):
         print("gen wikiqa!")
 
     def gen_embeddings(self):
         print("gen vocab")
 
-
-class wikiQAFactory(QAFactory):
-    def read_data(self):
-        return wikiqa()
 

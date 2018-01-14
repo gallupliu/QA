@@ -10,15 +10,15 @@
 
 
 """
-from data import Dataqa,QAFactory
+from data.test import DataSuper
 
-class insuraceqa(Dataqa):
+class insuraceqa(DataSuper):
     def gen_train(self):
         print("gen insuranceqa!")
 
     def gen_embeddings(self):
         print("gen vocab insurance")
 
-class insuranceQAFactory(QAFactory):
-    def read_data(self):
-        return insuraceqa()
+# class insuranceQAFactory(QAFactory):
+#     def read_data(self):
+#         return insuraceqa()
