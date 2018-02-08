@@ -12,9 +12,10 @@
 """
 
 import tensorflow as tf
+
 from  models import model_utils
 from  models.model import Model
-from utils.utils import feature2cos_sim, max_pooling, cal_loss_and_acc
+from models.utils import feature2cos_sim, max_pooling, cal_loss_and_acc
 
 
 class BiLSTM(Model):

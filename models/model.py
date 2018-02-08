@@ -12,12 +12,6 @@
 """
 
 
-
-import tensorflow as tf
-from  models import model_utils
-from utils.utils import feature2cos_sim, max_pooling, cal_loss_and_acc
-
-
 class Model():
     def __init__(self, config,embedding):
         self.config = config
