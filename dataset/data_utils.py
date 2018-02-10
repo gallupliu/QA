@@ -35,7 +35,10 @@ def clean_string(context):
     context = re.sub('((?:http|ftp)s?://|(www|ftp)\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+([/?].*)?', '<unk_url>', context)
     context = re.sub('\d{4}-\d{1,2}-\d{1,2}','<unk_date>',context)
     context = re.sub('[\s+\.\!\/,$%^*:)(+\"\']+|[+!！，。？、~@#￥%……&*（）：-]',"",context)
-    words_list = [''.join(word) for word in jieba.cut(context)]
+    #words_list = [''.join(word) for word in jieba.cut(context)]
+    words_list = []
+    for word in jieba.cut(context):
+        words_list.append(word)
     return words_list
 
 def get_words_dict():
@@ -46,6 +49,7 @@ def get_words_dict():
     answer = []
     for line in lines:
         data = line.split('\\t')
+        print(clean_string(data[1]))
         query.append(clean_string(data[0]))
         answer.append(clean_string(data[1]))
         for word in clean_string(line):
@@ -55,7 +59,7 @@ def get_words_dict():
     for word in words_dict:
 
         words.append(word)
-    print(words)
+    print(type(query),type(answer))
     return np.asarray(words),np.asarray(query),np.asarray(answer)
 
 
@@ -68,12 +72,12 @@ def get_word2index(mapping,sentence):
     :return:
     """
     mapping_strings = tf.constant(mapping)
-    sentence_tensor = tf.constant(sentence)
-    ids = tf.contrib.lookup.string_to_index(sentence_tensor,mapping_strings,default_value=-1)
+    # sentence_tensor = tf.constant(sentence)
+    ids = tf.contrib.lookup.string_to_index(sentence,mapping_strings,default_value=-1)
 
-    with tf.Session() as sess:
-        tf.tables_initializer().run()
-        print(sess.run(ids))
+    # with tf.Session() as sess:
+    #     tf.tables_initializer().run()
+    #     print(sess.run(ids))
     return ids
 
 def gen_data():
@@ -96,6 +100,7 @@ def read_csv_file(filename):
     :param filename:
     :return:
     """
+    raise NotImplementedError()
 
 
 def read_text_line(filename):
@@ -104,31 +109,51 @@ def read_text_line(filename):
     :param filename:
     :return:
     """
+    raise NotImplementedError()
 
 def read_tfrecord():
     """
     直接读取tfreocord生成dataset
     :return:
     """
-    pass
+    raise NotImplementedError()
+
+
+
 
 if __name__ == "__main__":
-    # filenames = ['./test']
-    # dataset = tf.data.TextLineDataset(filenames=filenames)
-    # #一次只生成一条数据
-    # iterator = dataset.make_one_shot_iterator()
-    # iterator_1 = dataset.make_initializable_iterator()
-    #
-    # batch = iterator.get_next()
-    # batch_1 = iterator_1.get_next()
-    #
-    # with tf.Session() as sess:
-    #     sess.run(iterator_1.initializer)
-    #     for i  in range(8):
-    #         print(batch.eval().decode('utf-8'))
-    #         print(batch_1.eval().decode('utf-8'))
-    #
-    # gen_data()
+
     words, query, answer = get_words_dict()
+
+    filenames = ['./list']
+    dataset = tf.data.TextLineDataset(filenames=filenames)
+    #一次只生成一条数据
+    iterator = dataset.make_one_shot_iterator()
+    # iterator_1 = dataset.make_initializable_iterator()
+
+    batch = iterator.get_next()
+    # batch_1 = iterator_1.get_next()
+    ids = tf.contrib.lookup.string_to_index(tf.constant(['芝加哥', '国际', '电影节', '最佳', '女主角', '是', '谁']), tf.constant(words), default_value=-1)
+    with tf.Session() as sess:
+        tf.tables_initializer().run()
+        # sess.run(iterator_1.initializer)
+        for i  in range(8):
+            # data  = tf.string_split(batch,'//t')
+            # print(data.eval())
+            print(batch.eval().decode('utf-8'))
+            # print(batch_1.eval().decode('utf-8'))
+            print(ids.eval())
+
+    # gen_data()
+    #
+    # length = len(query)
+    # for i in range(length):
+    #     print(query[i],answer[i])
     # query_ids=get_word2index(words, query)
-    answer_ids = get_word2index(words, answer)
+    # answer_ids = get_word2index(words, answer)
+    # answer = [['芝加哥', '国际', '电影节', 'ChicagoInternationalFilmFestival', '是', '北美', '历史', '最久', '的', '评奖', '电影节'],['最佳', '女', '主角奖', '余', '男', '《', '图雅', '的', '婚事', '》', '中国'],['芝加哥', '电影节', '每年', '10', '月', '举办', '自', '1965', '年', '第一届', '电影节', '至今', '芝加哥', '国际', '电影节', '已', '成为', '世界', '知名', '的', '年度', '电影', '盛会']]
+    # test_answer = []
+    # for data in answer:
+    #     test_answer.append(np.asarray(data))
+    # answer_ids = get_word2index(words, np.asarray(test_answer))
+
