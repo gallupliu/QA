@@ -27,9 +27,9 @@ from collections import defaultdict
 
 EMBEDDING_SIZE = 50
 def loadfile(outfile):
-    neg=pd.read_csv('../data/neg.csv',header=None,index_col=None)
-    pos=pd.read_csv('../data/pos.csv',header=None,index_col=None,error_bad_lines=False)
-    neu=pd.read_csv('../data/neutral.csv', header=None, index_col=None)
+    neg=pd.read_csv('./data/neg.csv',header=None,index_col=None)
+    pos=pd.read_csv('./data/pos.csv',header=None,index_col=None,error_bad_lines=False)
+    neu=pd.read_csv('./data/neutral.csv', header=None, index_col=None)
 
     combined = np.concatenate((pos[0], neu[0], neg[0]))
     y = np.concatenate((np.ones(len(pos), dtype=int), np.zeros(len(neu), dtype=int),
@@ -39,6 +39,13 @@ def loadfile(outfile):
     text = []
     for i in range(data_length):
         text.append(clean_string(combined[i]))
+    labels = []
+    for i in range(len(pos)):
+        labels.append([0,1,0])
+    for i in range(len(neu)):
+        labels.append([1,0,0])
+    for i in range(len(neg)):
+        labels.append([0,0,1])
     # assert  len(combined) == len(y)
     # f = open('./test_cut.txt','w',encoding="utf8")
     # with open(outfile,'w',newline='',encoding='utf-8') as csvfile:
@@ -50,7 +57,7 @@ def loadfile(outfile):
 
 
 
-    return text,y
+    return text,labels
 
 
 def clean_string(context):
@@ -121,7 +128,7 @@ def load_embedding(infile,word2vec_path):
         word_embeddings.append(word_embed_dict[word])
     return word2index,word_embeddings
 
-def get_sentence_ids(text,words,max_size=120):
+def get_sentence_ids(text,word2idx,max_size=120):
     new_text = []
     for data in text:
         # new_data = []
